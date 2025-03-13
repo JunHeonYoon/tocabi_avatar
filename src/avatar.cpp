@@ -49,6 +49,9 @@ AvatarController::AvatarController(RobotData &rd) : rd_(rd)
 
     haptic_force_pub = nh_avatar_.advertise<std_msgs::Float32MultiArray>("/tocabi/hand_ftsensors", 5);
 
+    hand_pose_pub = nh_avatar_.advertise<geometry_msgs::PoseArray>("/tocabi/handpose", 1);
+    hand_pose_msg.poses.resize(2);
+
     bool urdfmode = false;
     std::string urdf_path, desc_package_path;
     ros::param::get("/tocabi_controller/urdf_path", desc_package_path);
@@ -721,6 +724,34 @@ void AvatarController::computeSlow()
     else if (rd_.tc_.mode == 14)
     {
     }
+
+    static int pub_cnt = 0;
+    if(pub_cnt == 20){
+        hand_pose_msg.header.stamp = ros::Time::now();
+        hand_pose_msg.header.frame_id = "world";
+
+        hand_pose_msg.poses[0].position.x = rd_.link_[Right_Hand].xpos(0);
+        hand_pose_msg.poses[0].position.y = rd_.link_[Right_Hand].xpos(1);
+        hand_pose_msg.poses[0].position.z = rd_.link_[Right_Hand].xpos(2);
+        Eigen::Quaterniond quat_rhand(rd_.link_[Right_Hand].rotm);
+        hand_pose_msg.poses[0].orientation.x = quat_rhand.x();
+        hand_pose_msg.poses[0].orientation.y = quat_rhand.y();
+        hand_pose_msg.poses[0].orientation.z = quat_rhand.z();
+        hand_pose_msg.poses[0].orientation.w = quat_rhand.w();
+        
+        hand_pose_msg.poses[1].position.x = rd_.link_[Left_Hand].xpos(0);
+        hand_pose_msg.poses[1].position.y = rd_.link_[Left_Hand].xpos(1);
+        hand_pose_msg.poses[1].position.z = rd_.link_[Left_Hand].xpos(2);
+        Eigen::Quaterniond quat_lhand(rd_.link_[Left_Hand].rotm);
+        hand_pose_msg.poses[1].orientation.x = quat_lhand.x();
+        hand_pose_msg.poses[1].orientation.y = quat_lhand.y();
+        hand_pose_msg.poses[1].orientation.z = quat_lhand.z();
+        hand_pose_msg.poses[1].orientation.w = quat_lhand.w();
+
+        hand_pose_pub.publish(hand_pose_msg);
+        pub_cnt = 0;
+    }
+    pub_cnt++;
 }
 
 void AvatarController::computeFast()
