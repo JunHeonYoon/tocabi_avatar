@@ -1397,7 +1397,7 @@ void AvatarController::avatarModeStateMachine()
     }
     else
     {
-        larm_upperbody_sca_mlp_.self_collision_stop_cnt_ == 0;
+        larm_upperbody_sca_mlp_.self_collision_stop_cnt_ = 0;
     }
 
     if(rarm_upperbody_sca_mlp_.hx < sc_threshold)
@@ -1406,7 +1406,7 @@ void AvatarController::avatarModeStateMachine()
     }
     else
     {
-        rarm_upperbody_sca_mlp_.self_collision_stop_cnt_ == 0;
+        rarm_upperbody_sca_mlp_.self_collision_stop_cnt_ = 0;
     }
 
     /////////// self collision stop ///////////////////
@@ -4958,7 +4958,7 @@ void AvatarController::orientationRetargeting()
     robot_rshoulder_ori_init.setIdentity();
     robot_head_ori_init.setIdentity();
 
-    robot_head_ori_init = DyrosMath::rotateWithY(-10 * DEG2RAD);
+    // robot_head_ori_init = DyrosMath::rotateWithY(-10 * DEG2RAD);
     
     robot_upperbody_ori_init.setIdentity();
 
