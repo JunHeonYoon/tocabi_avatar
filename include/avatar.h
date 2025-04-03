@@ -116,8 +116,8 @@ public:
     LinkData link_avatar_[LINK_NUMBER + 1];
 
     //////////yh human demonstration collection////////
-    ros::Publisher hand_pose_pub;
-    geometry_msgs::PoseArray hand_pose_msg;
+    ros::Publisher robot_pose_pub;
+    geometry_msgs::PoseArray robot_pose_msg;
 
     //////////dg custom controller functions////////
     void setGains();
