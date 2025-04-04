@@ -139,6 +139,9 @@ public:
     VectorVQd __q_ddot_virtual;
     LinkData link_avatar_[LINK_NUMBER + 1];
 
+    //////////yh human demonstration collection////////
+    ros::Publisher robot_pose_pub;
+    geometry_msgs::PoseArray robot_pose_msg;
 
     //////////dg custom controller functions////////
     void setGains();
