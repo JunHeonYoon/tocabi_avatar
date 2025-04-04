@@ -2734,7 +2734,7 @@ void AvatarController::avatarModeStateMachine()
     }
     else
     {
-        larm_upperbody_sca_mlp_.self_collision_stop_cnt_ == 0;
+        larm_upperbody_sca_mlp_.self_collision_stop_cnt_ = 0;
     }
 
     if(rarm_upperbody_sca_mlp_.hx < 0.0)
@@ -2743,7 +2743,7 @@ void AvatarController::avatarModeStateMachine()
     }
     else
     {
-        rarm_upperbody_sca_mlp_.self_collision_stop_cnt_ == 0;
+        rarm_upperbody_sca_mlp_.self_collision_stop_cnt_ = 0;
     }
 
     if(upper_body_mode_ != 3)
