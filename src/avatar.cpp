@@ -6245,7 +6245,7 @@ void AvatarController::orientationRetargeting()
     robot_rshoulder_ori_init.setIdentity();
     robot_head_ori_init.setIdentity();
 
-    robot_head_ori_init = DyrosMath::rotateWithY(-10 * DEG2RAD);
+    // robot_head_ori_init = DyrosMath::rotateWithY(-10 * DEG2RAD);
     
     robot_upperbody_ori_init.setIdentity();
 
