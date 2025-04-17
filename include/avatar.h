@@ -8,6 +8,7 @@
 #include <std_msgs/Bool.h>
 #include "tocabi_msgs/matrix_3_4.h"
 #include <geometry_msgs/PoseArray.h>
+#include <sensor_msgs/JointState.h>
 #include <visualization_msgs/MarkerArray.h>
 #include <std_msgs/String.h>
 #include <sstream>
@@ -59,8 +60,8 @@ const std::string FILE_NAMES[FILE_CNT] =
     // "/home/dyros/data/dg/12_qpik_.txt",
     // "/home/dyros/data/dg/13_tracker_vel_.txt"
 };
-
-const std::string calibration_folder_dir_ = "/home/dyros/data/vive_tracker/calibration_log/dh";  //tocabi 
+const std::string calibration_folder_dir_ = "/home/embodied_ai/jh_ws/avatar_ws/data/vive_tracker/calibration_log";  //tocabi 
+// const std::string calibration_folder_dir_ = "/home/dyros/data/vive_tracker/calibration_log/dh";  //tocabi 
 // const std::string calibration_folder_dir_ = "/home/dg/data/vive_tracker/calibration_log/kaleem";    //dg pc
 //const std::string calibration_folder_dir_ = "/home/dh-sung/data/avatar/calibration_log/dg";  //master ubuntu 
 
@@ -142,6 +143,15 @@ public:
     //////////yh human demonstration collection////////
     ros::Publisher robot_pose_pub;
     geometry_msgs::PoseArray robot_pose_msg;
+
+    //////////jh HQP IK controller performance checking data////////
+    ros::Publisher desired_robot_pose_pub_;
+    geometry_msgs::PoseArray desired_robot_pose_msg_;
+    ros::Publisher tracker_pose_pub_;
+    geometry_msgs::PoseArray tracker_pose_msg_;
+    ros::Publisher desired_joint_pub_;
+    ros::Publisher robot_joint_pub_;
+
 
     //////////dg custom controller functions////////
     void setGains();

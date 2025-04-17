@@ -65,6 +65,12 @@ AvatarController::AvatarController(RobotData &rd) : rd_(rd)
 
     robot_pose_pub = nh_avatar_.advertise<geometry_msgs::PoseArray>("/tocabi/robot_poses", 1);
     robot_pose_msg.poses.resize(3);
+    desired_robot_pose_pub_ = nh_avatar_.advertise<geometry_msgs::PoseArray>("/tocabi/desired_robot_poses", 1);
+    desired_robot_pose_msg_.poses.resize(3);
+    tracker_pose_pub_ = nh_avatar_.advertise<geometry_msgs::PoseArray>("/tocabi/tracker_poses", 1);
+    tracker_pose_msg_.poses.resize(3);
+    robot_joint_pub_ = nh_avatar_.advertise<sensor_msgs::JointState>("/tocabi/robot_joints", 1);
+    desired_joint_pub_ = nh_avatar_.advertise<sensor_msgs::JointState>("/tocabi/desired_joints", 1);
 
     bool urdfmode = false;
     std::string urdf_path, desc_package_path;
@@ -1189,6 +1195,7 @@ void AvatarController::computeSlow()
 
     static int pub_cnt = 0;
     if(pub_cnt == 20){
+        // =============== Robot pose ===============
         robot_pose_msg.header.stamp = ros::Time::now();
         robot_pose_msg.header.frame_id = "world";
         // left hand
@@ -1220,6 +1227,104 @@ void AvatarController::computeSlow()
         robot_pose_msg.poses[2].orientation.w = quat_rhand.w();
 
         robot_pose_pub.publish(robot_pose_msg);
+
+        // =============== Desired Robot pose ===============
+        desired_robot_pose_msg_.header.stamp = ros::Time::now();
+        desired_robot_pose_msg_.header.frame_id = "world";
+        // left hand
+        desired_robot_pose_msg_.poses[0].position.x = master_lhand_pose_.translation()(0);
+        desired_robot_pose_msg_.poses[0].position.y = master_lhand_pose_.translation()(1);
+        desired_robot_pose_msg_.poses[0].position.z = master_lhand_pose_.translation()(2);
+        Eigen::Quaterniond desired_quat_lhand(master_lhand_pose_.rotation());
+        desired_robot_pose_msg_.poses[0].orientation.x = desired_quat_lhand.x();
+        desired_robot_pose_msg_.poses[0].orientation.y = desired_quat_lhand.y();
+        desired_robot_pose_msg_.poses[0].orientation.z = desired_quat_lhand.z();
+        desired_robot_pose_msg_.poses[0].orientation.w = desired_quat_lhand.w();
+        // head
+        desired_robot_pose_msg_.poses[1].position.x = master_head_pose_.translation()(0);
+        desired_robot_pose_msg_.poses[1].position.y = master_head_pose_.translation()(1);
+        desired_robot_pose_msg_.poses[1].position.z = master_head_pose_.translation()(2);
+        Eigen::Quaterniond desired_q_head(master_head_pose_.rotation());
+        desired_robot_pose_msg_.poses[1].orientation.x = desired_q_head.x();
+        desired_robot_pose_msg_.poses[1].orientation.y = desired_q_head.y();
+        desired_robot_pose_msg_.poses[1].orientation.z = desired_q_head.z();
+        desired_robot_pose_msg_.poses[1].orientation.w = desired_q_head.w();
+        // right hand
+        desired_robot_pose_msg_.poses[2].position.x = master_rhand_pose_.translation()(0);
+        desired_robot_pose_msg_.poses[2].position.y = master_rhand_pose_.translation()(1);
+        desired_robot_pose_msg_.poses[2].position.z = master_rhand_pose_.translation()(2);
+        Eigen::Quaterniond desired_quat_rhand(master_rhand_pose_.rotation());
+        desired_robot_pose_msg_.poses[2].orientation.x = desired_quat_rhand.x();
+        desired_robot_pose_msg_.poses[2].orientation.y = desired_quat_rhand.y();
+        desired_robot_pose_msg_.poses[2].orientation.z = desired_quat_rhand.z();
+        desired_robot_pose_msg_.poses[2].orientation.w = desired_quat_rhand.w();
+
+        desired_robot_pose_pub_.publish(desired_robot_pose_msg_);
+
+        // =============== Tracker pose ===============
+        tracker_pose_msg_.header.stamp = ros::Time::now();
+        tracker_pose_msg_.header.frame_id = "world";
+        // left hand
+        tracker_pose_msg_.poses[0].position.x = hmd_lhand_pose_.translation()(0);
+        tracker_pose_msg_.poses[0].position.y = hmd_lhand_pose_.translation()(1);
+        tracker_pose_msg_.poses[0].position.z = hmd_lhand_pose_.translation()(2);
+        Eigen::Quaterniond tracker_quat_lhand(hmd_lhand_pose_.rotation());
+        tracker_pose_msg_.poses[0].orientation.x = tracker_quat_lhand.x();
+        tracker_pose_msg_.poses[0].orientation.y = tracker_quat_lhand.y();
+        tracker_pose_msg_.poses[0].orientation.z = tracker_quat_lhand.z();
+        tracker_pose_msg_.poses[0].orientation.w = tracker_quat_lhand.w();
+        // head
+        tracker_pose_msg_.poses[1].position.x = hmd_head_pose_.translation()(0);
+        tracker_pose_msg_.poses[1].position.y = hmd_head_pose_.translation()(1);
+        tracker_pose_msg_.poses[1].position.z = hmd_head_pose_.translation()(2);
+        Eigen::Quaterniond tracker_quat_head(hmd_head_pose_.rotation());
+        tracker_pose_msg_.poses[1].orientation.x = tracker_quat_head.x();
+        tracker_pose_msg_.poses[1].orientation.y = tracker_quat_head.y();
+        tracker_pose_msg_.poses[1].orientation.z = tracker_quat_head.z();
+        tracker_pose_msg_.poses[1].orientation.w = tracker_quat_head.w();
+        // right hand
+        tracker_pose_msg_.poses[2].position.x = hmd_rhand_pose_.translation()(0);
+        tracker_pose_msg_.poses[2].position.y = hmd_rhand_pose_.translation()(1);
+        tracker_pose_msg_.poses[2].position.z = hmd_rhand_pose_.translation()(2);
+        Eigen::Quaterniond tracker_quat_rhand(hmd_rhand_pose_.rotation());
+        tracker_pose_msg_.poses[2].orientation.x = tracker_quat_rhand.x();
+        tracker_pose_msg_.poses[2].orientation.y = tracker_quat_rhand.y();
+        tracker_pose_msg_.poses[2].orientation.z = tracker_quat_rhand.z();
+        tracker_pose_msg_.poses[2].orientation.w = tracker_quat_rhand.w();
+
+        tracker_pose_pub_.publish(tracker_pose_msg_);
+
+        // ===============  joint ===============
+        sensor_msgs::JointState robot_joint_msg, desired_joint_msg;
+
+        robot_joint_msg.header.stamp = ros::Time::now();
+        desired_joint_msg.header.stamp = ros::Time::now();
+
+        robot_joint_msg.name.resize(MODEL_DOF);
+        robot_joint_msg.position.resize(MODEL_DOF);
+        robot_joint_msg.velocity.resize(MODEL_DOF);
+        robot_joint_msg.effort.resize(MODEL_DOF);
+
+        desired_joint_msg.name.resize(MODEL_DOF);
+        desired_joint_msg.position.resize(MODEL_DOF);
+        desired_joint_msg.velocity.resize(MODEL_DOF);
+        desired_joint_msg.effort.resize(MODEL_DOF);
+
+        for(size_t i=0; i<MODEL_DOF; i++)
+        {
+            robot_joint_msg.name[i] = JOINT_NAME[i];
+            robot_joint_msg.position[i] = rd_.q_(i);
+            robot_joint_msg.velocity[i] = rd_.q_dot_(i);
+            robot_joint_msg.effort[i] = rd_.torque_elmo_(i);
+
+            desired_joint_msg.name[i] = JOINT_NAME[i];
+            desired_joint_msg.position[i] = rd_.q_desired(i);
+            desired_joint_msg.velocity[i] = rd_.q_dot_desired(i);
+            desired_joint_msg.effort[i] = rd_.torque_desired(i);
+        }
+        robot_joint_pub_.publish(robot_joint_msg);
+        desired_joint_pub_.publish(desired_joint_msg);
+
         pub_cnt = 0;
     }
     pub_cnt++;
