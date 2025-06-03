@@ -60,8 +60,9 @@ const std::string FILE_NAMES[FILE_CNT] =
     // "/home/dyros/data/dg/12_qpik_.txt",
     // "/home/dyros/data/dg/13_tracker_vel_.txt"
 };
-const std::string calibration_folder_dir_ = "/home/embodied_ai/jh_ws/avatar_ws/data/vive_tracker/calibration_log";  //tocabi 
+// const std::string calibration_folder_dir_ = "/home/embodied_ai/jh_ws/avatar_ws/data/vive_tracker/calibration_log";  //tocabi 
 // const std::string calibration_folder_dir_ = "/home/dyros/data/vive_tracker/calibration_log/dh";  //tocabi 
+const std::string calibration_folder_dir_ = "/home/dyros/data/vive_tracker/calibration_log/social";  //tocabi 
 // const std::string calibration_folder_dir_ = "/home/dg/data/vive_tracker/calibration_log/kaleem";    //dg pc
 //const std::string calibration_folder_dir_ = "/home/dh-sung/data/avatar/calibration_log/dg";  //master ubuntu 
 
