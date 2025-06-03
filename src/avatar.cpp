@@ -2473,7 +2473,8 @@ void AvatarController::getRobotData()
         // cout<< cred <<"WARNING: 'dt' is too large in thread2: "<< dt_<< creset << endl;
     }
 
-    dt_ = DyrosMath::minmax_cut(dt_, 0.0005, 0.002);
+    // dt_ = DyrosMath::minmax_cut(dt_, 0.0005, 0.002);
+    dt_ = 0.0005;
 
     current_q_ = __q_virtual.segment(6,MODEL_DOF);
     current_q_dot_ = __q_dot_virtual.segment(6,MODEL_DOF);
